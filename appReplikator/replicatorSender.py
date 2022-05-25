@@ -1,5 +1,6 @@
 import socket
 import threading
+import queue
 
 HEADER = 64
 PORT = 5050
@@ -12,8 +13,17 @@ shotPort = 5052
 def receiveWriterMessage(conn):
     msg = conn.recv(512).decode(FORMAT)
     print(f"received {msg}")
+    bufferQueue.put(msg)
     
     return msg
+
+def sendToReceiver(client, msg):
+    
+    msg_length = len(msg)
+    send_length = str(msg_length).encode(FORMAT)
+    send_length += b' ' * (HEADER - len(send_length))
+    client.send(send_length)          
+    client.send(msg.encode(FORMAT))
 
 def setupClient():
     
@@ -25,10 +35,12 @@ def handle_client(conn):
     #shotClient = setupClient()
     
     while True:
-        receiveWriterMessage(conn)    
+        msg = receiveWriterMessage(conn)
+        #sendToReceiver(shotClient, msg) 
 
 if __name__ == "__main__": # pragma: no cover
     
+    bufferQueue = queue.Queue()
     print("[STARTING] server is starting...")
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(ADDR)
