@@ -22,6 +22,9 @@ def receiveSenderMessage(conn):
     msg_length = conn.recv(HEADER).decode(FORMAT)
     if msg_length:
         msg = conn.recv(msg_length).decode(FORMAT)
+        
+    listEl.append(msg)
+    
     return msg
                     
 if __name__ == "__main__": # pragma: no cover
