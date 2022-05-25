@@ -9,6 +9,12 @@ FORMAT = 'utf-8'
 shotServer = "localhost"
 shotPort = 5052
 
+def receiveWriterMessage(conn):
+    msg = conn.recv(512).decode(FORMAT)
+    print(f"received {msg}")
+    
+    return msg
+
 def setupClient():
     
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,6 +23,9 @@ def setupClient():
 
 def handle_client(conn):
     #shotClient = setupClient()
+    
+    while True:
+        receiveWriterMessage(conn)    
 
 if __name__ == "__main__": # pragma: no cover
     
