@@ -11,7 +11,18 @@ shotPort = 5053
 
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
-                
+    
+    while True:
+        receiveSenderMessage(conn)
+    
+    conn.close()
+    
+def receiveSenderMessage(conn):
+    msg = ''
+    msg_length = conn.recv(HEADER).decode(FORMAT)
+    if msg_length:
+        msg = conn.recv(msg_length).decode(FORMAT)
+    return msg
                     
 if __name__ == "__main__": # pragma: no cover
     
