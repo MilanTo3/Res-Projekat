@@ -12,6 +12,8 @@ shotPort = 5053
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
     
+    sendThread.start()
+    
     while True:
         receiveSenderMessage(conn)
     
@@ -26,10 +28,14 @@ def receiveSenderMessage(conn):
     listEl.append(msg)
     
     return msg
+
+def periodicSend(listEl):
+    pass
                     
 if __name__ == "__main__": # pragma: no cover
     
     listEl = []
+    sendThread = threading.Thread(target=periodicSend, args=(listEl, ))
     
     print("[STARTING] server is starting...")
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
