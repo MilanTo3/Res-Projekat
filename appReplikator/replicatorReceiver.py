@@ -1,5 +1,7 @@
 import socket
 import threading
+import time, copy
+from pip import List
 
 HEADER = 64
 PORT = 5052
@@ -17,8 +19,6 @@ def handle_client(conn, addr):
     while True:
         receiveSenderMessage(conn)
     
-    conn.close()
-    
 def receiveSenderMessage(conn):
     msg = ''
     msg_length = conn.recv(HEADER).decode(FORMAT)
@@ -29,8 +29,28 @@ def receiveSenderMessage(conn):
     
     return msg
 
+def makeDataString(listEl: List):
+    
+    strData = ''
+    freezeList = listEl.copy()
+    for i in range(len(freezeList)):
+        strData += freezeList[i]
+        if i != (len(freezeList) - 1):
+            strData += '<>'
+        listEl.pop(freezeList[i])
+        
+    return strData
+
+def sendToReader(listEl):
+    
+    msg = makeDataString(listEl)
+    print(f'To Send: {msg}.')
+
 def periodicSend(listEl):
-    pass
+    
+    while True:
+        sendToReader(listEl)
+        time.sleep(5)
                     
 if __name__ == "__main__": # pragma: no cover
     
@@ -45,3 +65,4 @@ if __name__ == "__main__": # pragma: no cover
     conn, addr = server.accept()
     print(f"Replicator sender accepted.")
     handle_client(conn, addr)
+    
