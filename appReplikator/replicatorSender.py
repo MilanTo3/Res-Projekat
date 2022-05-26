@@ -13,6 +13,7 @@ def receiveWriterMessage(conn):
     msg = ''
     msg_length = conn.recv(HEADER).decode(FORMAT)
     if msg_length:
+        msg_length = int(msg_length)
         msg = conn.recv(msg_length).decode(FORMAT)
     return msg
 
