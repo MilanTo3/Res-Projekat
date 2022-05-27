@@ -1,6 +1,6 @@
 import socket, unittest, unittest.mock
 import threading
-from appReplikator.replicatorReceiver import setupClient, setupServer, receiveSenderMessage, makeDataString
+from appReplikator.replicatorReceiver import setupClient, setupServer, receiveSenderMessage, makeDataString, sendToReader
 
 HEADER = 64
 PORT = 5052
@@ -99,4 +99,16 @@ class testReplicatorReceiver(unittest.TestCase):
         self.assertEqual(data1, '[id: 1, cnsmp: 3];[id: 1, cnsmp: 200];[id: 3, cnsmp: 23]')
         self.assertEqual(data2, '[id: 1, cnsmp: 20]')
         self.assertEqual(data3, '')
+    
+    def test_sendToReader(self):
+        
+        server_thread = threading.Thread(target=self.run_mock_receiver, args=(True, ))
+        server_thread.start()
+        
+        c = setupClient()
+        listEl = ['[id: 1, cnsmp: 2]', '[id: 4, cnsmp: 3]', '[id: 210, cnsmp: 34]']
+        
+        sendToReader(c, listEl)
+        server_thread.join()
+        self.assertEqual('[id: 1, cnsmp: 2];[id: 4, cnsmp: 3];[id: 210, cnsmp: 34]', self.k)
         

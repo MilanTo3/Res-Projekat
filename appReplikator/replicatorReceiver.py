@@ -41,10 +41,15 @@ def makeDataString(listEl: List):
     print(listEl)
     return strData
 
-def sendToReader(listEl):
+def sendToReader(cli, listEl):
     
     msg = makeDataString(listEl)
-
+    msg_length = len(msg)
+    send_length = str(msg_length).encode(FORMAT)
+    send_length += b' ' * (HEADER - len(send_length))
+    cli.send(send_length)
+    cli.send(msg.encode(FORMAT))
+    
 def setupClient():
     
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -56,7 +61,7 @@ def periodicSend(listEl):
     #client = setupClient()
     
     while True:
-        sendToReader(listEl)
+        #sendToReader(client, listEl)
         time.sleep(5)
         
 def setupServer():
