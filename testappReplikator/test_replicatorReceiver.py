@@ -1,6 +1,6 @@
 import socket, unittest, unittest.mock
 import threading
-from appReplikator.replicatorReceiver import setupClient, setupServer, receiveSenderMessage
+from appReplikator.replicatorReceiver import setupClient, setupServer, receiveSenderMessage, makeDataString
 
 HEADER = 64
 PORT = 5052
@@ -12,7 +12,9 @@ shotPort = 5053
 
 class testReplicatorReceiver(unittest.TestCase):
     
-    def run_mock_receiver(self, recv):
+    k = ''
+    
+    def run_mock_receiver(self, recv): # pragma: no cover
             
         server_sock = socket.socket()
         server_sock.bind(('127.0.0.1', shotPort))
@@ -20,11 +22,10 @@ class testReplicatorReceiver(unittest.TestCase):
         conn, addr = server_sock.accept()
         if recv:
             msg_length = conn.recv(HEADER).decode(FORMAT)
-            if msg_length:
-                msg_length = int(msg_length)
-                self.k = conn.recv(msg_length).decode(FORMAT)
+            msg_length = int(msg_length)
+            self.k = conn.recv(msg_length).decode(FORMAT)
         server_sock.close()
-        
+    
     def run_fake_client(self):
         
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -84,4 +85,18 @@ class testReplicatorReceiver(unittest.TestCase):
         msg = receiveSenderMessage(conn)
         sock.close()
         self.assertEqual('Porukica', msg)
-            
+        
+    def test_makeDataString(self):
+        
+        listEl1 = ['[id: 1, cnsmp: 3]', '[id: 1, cnsmp: 200]', '[id: 3, cnsmp: 23]']
+        listEl2 = ['[id: 1, cnsmp: 20]']
+        listEl3 = ['']
+        
+        data1 = makeDataString(listEl1)
+        data2 = makeDataString(listEl2)
+        data3 = makeDataString(listEl3)
+        
+        self.assertEqual(data1, '[id: 1, cnsmp: 3];[id: 1, cnsmp: 200];[id: 3, cnsmp: 23]')
+        self.assertEqual(data2, '[id: 1, cnsmp: 20]')
+        self.assertEqual(data3, '')
+        

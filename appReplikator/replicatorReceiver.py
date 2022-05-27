@@ -16,8 +16,6 @@ def handle_client(conn):
     while True:
         msg = receiveSenderMessage(conn, listEl)
         listEl.append(msg)
-        print('---List after add: ')
-        print(listEl)
     
 def receiveSenderMessage(conn):
     msg = ''
