@@ -53,8 +53,7 @@ class test_replicatorSender(unittest.TestCase):
         server_thread = threading.Thread(target=self.run_mock_receiver)
         server_thread.start()
 
-        with unittest.mock.patch('appReplikator.writer.socket.socket'):
+        with unittest.mock.patch('appReplikator.replicatorSender.socket.socket'):
             c = setupClient()
-            c.connect.assert_called_with(ADDR)
-        
+            c.connect.assert_called_with(('localhost', 5052))
     
