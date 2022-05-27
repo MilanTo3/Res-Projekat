@@ -12,9 +12,6 @@ shotServer = "localhost"
 shotPort = 5053
 
 def handle_client(conn, addr):
-    print(f"[NEW CONNECTION] {addr} connected.")
-    
-    sendThread.start()
     
     while True:
         receiveSenderMessage(conn)
@@ -27,6 +24,8 @@ def receiveSenderMessage(conn):
         msg = conn.recv(msg_length).decode(FORMAT)
         
     listEl.append(msg)
+    print('---List after add: ')
+    print(listEl)
     
     return msg
 
@@ -34,20 +33,30 @@ def makeDataString(listEl: List):
     
     strData = ''
     freezeList = listEl.copy()
+    print('---List before:')
+    print(listEl)
     for i in range(len(freezeList)):
         strData += freezeList[i]
         if i != (len(freezeList) - 1):
-            strData += '<>'
+            strData += ';'
         listEl.remove(freezeList[i])
-        
+    print('---ListAfter:')
+    print(listEl)
     return strData
 
 def sendToReader(listEl):
     
     msg = makeDataString(listEl)
-    print(f'To Send: {msg}.')
+
+def setupClient():
+    
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((shotServer, shotPort))
+    return client
 
 def periodicSend(listEl):
+    
+    #client = setupClient()
     
     while True:
         sendToReader(listEl)
@@ -65,5 +74,7 @@ if __name__ == "__main__": # pragma: no cover
     print(f"[LISTENING] Server is listening on {SERVER}")
     conn, addr = server.accept()
     print(f"Replicator sender accepted.")
+    print(f"[NEW CONNECTION] {addr} connected.")
+    sendThread.start()
     handle_client(conn, addr)
     
