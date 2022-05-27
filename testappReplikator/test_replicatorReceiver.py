@@ -1,6 +1,6 @@
 import socket, unittest, unittest.mock
 import threading
-from appReplikator.replicatorReceiver import setupClient
+from appReplikator.replicatorReceiver import setupClient, setupServer
 
 HEADER = 64
 PORT = 5052
@@ -52,3 +52,12 @@ class testReplicatorReceiver(unittest.TestCase):
         with unittest.mock.patch('appReplikator.replicatorReceiver.socket.socket'):
             c = setupClient()
             c.connect.assert_called_with(('localhost', 5053))
+            
+    def test_setupServer(self):
+        
+        with unittest.mock.patch('appReplikator.replicatorReceiver.socket.socket'):
+            s=setupServer()
+            s.bind.assert_called_with(('localhost', 5052))
+            
+    
+            
