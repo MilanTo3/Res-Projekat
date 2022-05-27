@@ -1,6 +1,6 @@
 import socket, unittest, unittest.mock
 import threading
-from appReplikator.replicatorReceiver import setupClient, setupServer
+from appReplikator.replicatorReceiver import setupClient, setupServer, receiveSenderMessage
 
 HEADER = 64
 PORT = 5052
@@ -24,6 +24,19 @@ class testReplicatorReceiver(unittest.TestCase):
                 msg_length = int(msg_length)
                 self.k = conn.recv(msg_length).decode(FORMAT)
         server_sock.close()
+        
+    def run_fake_client(self):
+        
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect(('localhost', 5052))
+        
+        msg = 'Porukica'
+        msg_length = len(msg)
+        send_length = str(msg_length).encode(FORMAT)
+        send_length += b' ' * (HEADER - len(send_length))
+        client.send(send_length)
+        client.send(msg.encode(FORMAT))
+        client.close()
         
     def test_setupClient1(self):
         
@@ -59,5 +72,16 @@ class testReplicatorReceiver(unittest.TestCase):
             s=setupServer()
             s.bind.assert_called_with(('localhost', 5052))
             
-    
+    def test_receiveSenderMessage(self):
+        
+        client_thread = threading.Thread(target=self.run_fake_client)
+        sock = socket.socket()
+        sock.bind(ADDR)
+        sock.listen()
+        client_thread.start()
+        conn, addr = sock.accept()
+        
+        msg = receiveSenderMessage(conn)
+        sock.close()
+        self.assertEqual('Porukica', msg)
             

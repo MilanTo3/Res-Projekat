@@ -11,10 +11,13 @@ FORMAT = 'utf-8'
 shotServer = "localhost"
 shotPort = 5053
 
-def handle_client(conn, addr):
+def handle_client(conn):
     
     while True:
-        receiveSenderMessage(conn)
+        msg = receiveSenderMessage(conn, listEl)
+        listEl.append(msg)
+        print('---List after add: ')
+        print(listEl)
     
 def receiveSenderMessage(conn):
     msg = ''
@@ -22,10 +25,6 @@ def receiveSenderMessage(conn):
     if msg_length:
         msg_length = int(msg_length)
         msg = conn.recv(msg_length).decode(FORMAT)
-        
-    listEl.append(msg)
-    print('---List after add: ')
-    print(listEl)
     
     return msg
 
