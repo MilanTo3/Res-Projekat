@@ -61,16 +61,21 @@ def periodicSend(listEl):
     while True:
         sendToReader(listEl)
         time.sleep(5)
+        
+def setupServer():
+    print("[STARTING] server is starting...")
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(ADDR)
+    server.listen()
+    
+    return server
                     
 if __name__ == "__main__": # pragma: no cover
     
     listEl = []
     sendThread = threading.Thread(target=periodicSend, args=(listEl, ))
     
-    print("[STARTING] server is starting...")
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(ADDR)
-    server.listen()
+    server = setupServer()
     print(f"[LISTENING] Server is listening on {SERVER}")
     conn, addr = server.accept()
     print(f"Replicator sender accepted.")

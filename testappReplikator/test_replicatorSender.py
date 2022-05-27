@@ -17,7 +17,7 @@ class test_replicatorSender(unittest.TestCase):
     def run_mock_receiver(self, recv):
             
         server_sock = socket.socket()
-        server_sock.bind(('127.0.0.1', 5052))
+        server_sock.bind(('127.0.0.1', shotPort))
         server_sock.listen()
         conn, addr = server_sock.accept()
         if recv:
