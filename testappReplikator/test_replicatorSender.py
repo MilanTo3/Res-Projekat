@@ -86,3 +86,14 @@ class test_replicatorSender(unittest.TestCase):
         msg = receiveWriterMessage(conn)
         sock.close()
         self.assertEqual('Porukica', msg)
+        
+    def test_sendMessage(self):
+        
+        server_thread = threading.Thread(target=self.run_mock_receiver, args=(True, ))
+        server_thread.start()
+        
+        c = setupClient()
+        sendToReceiver(c, 'Porukica2')
+        
+        server_thread.join() # Sacekamo da server primi poruku i setuje self.k na 'Porukica2'.
+        self.assertEqual('Porukica2', self.k)
