@@ -1,6 +1,6 @@
 import socket, unittest, unittest.mock
 import threading
-from appReplikator.replicatorSender import setupClient, receiveWriterMessage, sendToReceiver
+from appReplikator.replicatorSender import setupClient, setupServer, receiveWriterMessage, sendToReceiver
 
 HEADER = 64
 PORT = 5050
@@ -27,6 +27,19 @@ class test_replicatorSender(unittest.TestCase):
                 self.k = conn.recv(msg_length).decode(FORMAT)
         server_sock.close()
         
+    def run_fake_client(self):
+        
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect(ADDR)
+        
+        msg = 'Porukica'
+        msg_length = len(msg)
+        send_length = str(msg_length).encode(FORMAT)
+        send_length += b' ' * (HEADER - len(send_length))
+        client.send(send_length)
+        client.send(msg.encode(FORMAT))
+        client.close()
+        
     def test_setupClient1(self):
         
         server_thread = threading.Thread(target=self.run_mock_receiver, args=(False, ))
@@ -34,6 +47,7 @@ class test_replicatorSender(unittest.TestCase):
         
         client = setupClient()
         self.assertIsNotNone(client, 'Client isnt none! Successfull connect call.')
+        client.close()
         
     def test_setupClient2(self):
         
@@ -49,11 +63,26 @@ class test_replicatorSender(unittest.TestCase):
         self.assertFalse(raised, 'Exception not raised.')
             
     def test_setupClient(self):
-        
-        server_thread = threading.Thread(target=self.run_mock_receiver)
-        server_thread.start()
 
         with unittest.mock.patch('appReplikator.replicatorSender.socket.socket'):
             c = setupClient()
             c.connect.assert_called_with(('localhost', 5052))
-    
+            
+    def test_setupServer(self):
+        
+        with unittest.mock.patch('appReplikator.replicatorSender.socket.socket'):
+            s = setupServer()
+            s.bind.assert_called_with(('localhost', 5050))
+            
+    def test_receiveWriterMessage(self):
+        
+        client_thread = threading.Thread(target=self.run_fake_client)
+        sock = socket.socket()
+        sock.bind(ADDR)
+        sock.listen()
+        client_thread.start()
+        conn, addr = sock.accept()
+        
+        msg = receiveWriterMessage(conn)
+        sock.close()
+        self.assertEqual('Porukica', msg)

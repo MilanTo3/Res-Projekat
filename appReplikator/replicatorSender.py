@@ -38,15 +38,20 @@ def handle_client(conn):
         relayLock.acquire()
         sendToReceiver(shotClient, msg)
         relayLock.release()
+        
+def setupServer():
+    print("[STARTING] server is starting...")
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(ADDR)
+    server.listen()
+    
+    return server
 
 if __name__ == "__main__": # pragma: no cover
     
     shotClient = setupClient()    
     relayLock = threading.Lock()
-    print("[STARTING] server is starting...")
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(ADDR)
-    server.listen()
+    server = setupServer()
 
     print(f"[LISTENING] Server is listening on {SERVER}")
     while True:
