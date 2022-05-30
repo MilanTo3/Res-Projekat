@@ -18,7 +18,7 @@ def createMessage():
     return id, water_consumed
 
 def formatMessage(id, cnsmp):
-    formatedMessage = "{id: " + str(id) + ", cnspn: " + str(cnsmp) + "}"
+    formatedMessage = '{"id": ' + str(id) + ',"cnspn": ' + str(cnsmp) + '}'
     return formatedMessage
 
 def setupClient():

@@ -14,7 +14,8 @@ shotPort = 5053
 def handle_client(conn):
     
     while True:
-        msg = receiveSenderMessage(conn, listEl)
+        msg = receiveSenderMessage(conn)
+        print(msg)
         listEl.append(msg)
     
 def receiveSenderMessage(conn):
@@ -83,5 +84,5 @@ if __name__ == "__main__": # pragma: no cover
     print(f"Replicator sender accepted.")
     print(f"[NEW CONNECTION] {addr} connected.")
     sendThread.start()
-    handle_client(conn, addr)
+    handle_client(conn)
     
