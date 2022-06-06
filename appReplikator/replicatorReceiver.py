@@ -17,7 +17,7 @@ def handle_client(conn):
         msg = receiveSenderMessage(conn)
         print(msg)
         listEl.append(msg)
-    
+            
 def receiveSenderMessage(conn):
     msg = ''
     msg_length = conn.recv(HEADER).decode(FORMAT)

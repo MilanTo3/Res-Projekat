@@ -50,4 +50,4 @@ if __name__ == "__main__": # pragma : no cover
         sendToSender(client, fMessage)
         print("Message sent")
         time.sleep(2)
-    
+        
