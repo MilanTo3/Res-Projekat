@@ -46,3 +46,14 @@ def readConsumerInfo(id):
     conn.close()
     
     return temp
+
+def readAllConsumers():
+    conn = sqlite3.connect('consumers.db')
+    cur = conn.cursor()
+
+    cur.execute("""SELECT * FROM consumers_info""")
+    
+    temp = cur.fetchall()
+    conn.close()
+
+    return temp
