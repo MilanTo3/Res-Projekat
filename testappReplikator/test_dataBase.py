@@ -21,6 +21,13 @@ class testDataBase(unittest.TestCase):
         print(temp)
         self.assertEqual(temp[0], 1)
 
+    def test_readConsumerInfo(self):
+        addConsumer(1, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade", "testDB.db")
+        temp = readConsumerInfo(1, 'testDB.db')
+
+        print(temp)
+        self.assertTupleEqual(temp, (1, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade"))
+        self.assertIsInstance(temp, tuple)
     
 
     
