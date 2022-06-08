@@ -1,6 +1,7 @@
 from lib2to3.pgen2.token import EQUAL
+from tempfile import tempdir
 import unittest, unittest.mock, sqlite3
-from ResProjekat.appReplikator.DataBase import readAllConsumers
+from ResProjekat.appReplikator.DataBase import readAllConsumers, updateConsumer
 from appReplikator.DataBase import addConsumer, createTable, readConsumerInfo
 
 class testDataBase(unittest.TestCase):
@@ -9,6 +10,7 @@ class testDataBase(unittest.TestCase):
         cursor = conn.cursor()
         
         cursor.execute("""DELETE FROM consumers_info;""")
+        cursor.execute("""DELETE FROM consumption_info;""")
 
         conn.commit()
         conn.close()
@@ -40,3 +42,29 @@ class testDataBase(unittest.TestCase):
         self.assertIsInstance(temp, list)
         self.assertListEqual(temp, [(1, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade"), (2, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade"), (3, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade"), (4, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade")])
     
+    def test_updateConsumer_1(self):
+        addConsumer(1, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade", "testDB.db")
+        updateConsumer(1, 30, 'testDB.db', 1)
+
+        conn = sqlite3.connect('testDB.db')
+        c = conn.cursor()
+
+        c.execute("""SELECT * FROM consumption_info WHERE Id = ? AND Month = ?""", (1, 1))
+        temp = c.fetchone()
+
+        self.assertEqual(temp, (1, 30, 1))        
+        conn.close()
+
+    def test_updateConsumer_2(self):
+        addConsumer(1, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade", "testDB.db")
+        updateConsumer(1, 30, 'testDB.db', 1)
+        updateConsumer(1, 30, 'testDB.db', 1)
+
+        conn = sqlite3.connect('testDB.db')
+        c = conn.cursor()
+
+        c.execute("""SELECT * FROM consumption_info WHERE Id = ? AND Month = ?""", (1, 1))
+        temp = c.fetchone()
+
+        self.assertEqual(temp, (1, 60, 1))        
+        conn.close()

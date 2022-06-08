@@ -58,11 +58,14 @@ def readAllConsumers(db_name = 'consumers.db'):
 
     return temp
 
-def updateConsumer(id, cnspn, db_name = 'consumers.db'):
+def updateConsumer(id, cnspn, db_name = 'consumers.db', flag = 0):
     conn = sqlite3.connect(db_name)
     cur = conn.cursor()
 
-    month = random.randint(1, 12)
+    if flag == 0:
+        month = random.randint(1, 12)
+    else:
+        month = 1
 
     cur.execute("""SELECT * FROM consumption_info WHERE Id = ? AND Month = ?""", (id, month))
     temp = cur.fetchone()
