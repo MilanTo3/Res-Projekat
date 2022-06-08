@@ -29,5 +29,14 @@ class testDataBase(unittest.TestCase):
         self.assertTupleEqual(temp, (1, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade"))
         self.assertIsInstance(temp, tuple)
     
+    def test_readAllConsumers(self):
+        addConsumer(1, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade", "testDB.db")
+        addConsumer(2, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade", "testDB.db")
+        addConsumer(3, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade", "testDB.db")
+        addConsumer(4, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade", "testDB.db")
 
+        temp = readAllConsumers('testDB.db')
+
+        self.assertIsInstance(temp, list)
+        self.assertListEqual(temp, [(1, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade"), (2, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade"), (3, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade"), (4, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade")])
     
