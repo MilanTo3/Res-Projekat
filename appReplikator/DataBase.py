@@ -74,3 +74,33 @@ def updateConsumer(id, cnspn):
 
     conn.commit()
     conn.close()
+
+def printConsumption():
+    conn = sqlite3.connect('consumers.db')
+    cur = conn.cursor()
+
+    cur.execute("""SELECT * FROM consumption_info""")
+    print(cur.fetchall())
+    conn.close()
+
+def monthlyStreetConsumption(street):
+    conn = sqlite3.connect('consumers.db')
+    cur = conn.cursor()
+
+    cur.execute("""SELECT Id FROM consumers_info WHERE Street = ?""", (street,))
+    temp = cur.fetchall()
+
+    if temp:
+        cur.execute("""SELECT Consumption, Month FROM consumption_info WHERE Id IN (SELECT Id FROM consumers_info WHERE Street = ?)""", (street,))
+        result = cur.fetchall() 
+        sum = defaultdict(int)
+
+        for i, k in result:
+            sum[k] += i 
+
+        print(sum)
+    else:
+        conn.close()
+        raise Exception("Desired street does not exist!")
+
+    conn.close()
