@@ -35,3 +35,14 @@ def addConsumer(id, name, surname, street, street_num, post_num, city):
     
     conn.commit()
     conn.close()
+
+def readConsumerInfo(id):
+    conn = sqlite3.connect('consumers.db')
+    cur = conn.cursor()
+
+    cur.execute("""SELECT * FROM consumers_info WHERE Id = ?""", (id,))
+    
+    temp = cur.fetchone()
+    conn.close()
+    
+    return temp
