@@ -22,3 +22,16 @@ def createTable():
                                                 Month integer)""")
     conn.commit()
     conn.close()
+
+def addConsumer(id, name, surname, street, street_num, post_num, city):
+    conn = sqlite3.connect('consumers.db')
+    cur = conn.cursor()
+
+    try:
+        cur.execute("""INSERT INTO consumers_info(Id, Name, Surname, Street, Street_num, Post_num, City)
+                                        VALUES(?, ?, ?, ?, ?, ?, ?)""", (id, name, surname, street, street_num, post_num, city))
+    except sqlite3.IntegrityError:
+        raise Exception("User with this ID already exists")
+    
+    conn.commit()
+    conn.close()

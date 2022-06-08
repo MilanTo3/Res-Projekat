@@ -1,4 +1,4 @@
-class Consumer:
+class consumer:
 
      def __init__(self, id, name, surname, street, s_num, post_num, city):
         self.id = id
