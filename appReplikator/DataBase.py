@@ -1,14 +1,14 @@
 from collections import defaultdict
 import sqlite3
 import random
-from Consumer import consumer
 
 
-def createTable():
-    conn = sqlite3.connect('consumers.db')
+
+def createTable(db_name = 'consumers.db'):
+    conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
-    cursor.execute("""CREATE TABLE consumers_info(Id integer PRIMARY KEY, 
+    cursor.execute("""CREATE TABLE IF NOT EXISTS consumers_info(Id integer PRIMARY KEY, 
                                               Name text,
                                               Surname text, 
                                               Street text, 
@@ -17,14 +17,14 @@ def createTable():
                                               City text)""")
     
 
-    cursor.execute("""CREATE TABLE consumption_info(Id integer, 
+    cursor.execute("""CREATE TABLE IF NOT EXISTS consumption_info(Id integer, 
                                                 Consumption real, 
                                                 Month integer)""")
     conn.commit()
     conn.close()
 
-def addConsumer(id, name, surname, street, street_num, post_num, city):
-    conn = sqlite3.connect('consumers.db')
+def addConsumer(id, name, surname, street, street_num, post_num, city, db_name = 'consumers.db'):
+    conn = sqlite3.connect(db_name)
     cur = conn.cursor()
 
     try:
@@ -36,8 +36,8 @@ def addConsumer(id, name, surname, street, street_num, post_num, city):
     conn.commit()
     conn.close()
 
-def readConsumerInfo(id):
-    conn = sqlite3.connect('consumers.db')
+def readConsumerInfo(id, db_name = 'consumers.db'):
+    conn = sqlite3.connect(db_name)
     cur = conn.cursor()
 
     cur.execute("""SELECT * FROM consumers_info WHERE Id = ?""", (id,))
@@ -47,8 +47,8 @@ def readConsumerInfo(id):
     
     return temp
 
-def readAllConsumers():
-    conn = sqlite3.connect('consumers.db')
+def readAllConsumers(db_name = 'consumers.db'):
+    conn = sqlite3.connect(db_name)
     cur = conn.cursor()
 
     cur.execute("""SELECT * FROM consumers_info""")
@@ -58,8 +58,8 @@ def readAllConsumers():
 
     return temp
 
-def updateConsumer(id, cnspn):
-    conn = sqlite3.connect('consumers.db')
+def updateConsumer(id, cnspn, db_name = 'consumers.db'):
+    conn = sqlite3.connect(db_name)
     cur = conn.cursor()
 
     month = random.randint(1, 12)
@@ -126,3 +126,4 @@ def monthlyConsumerConsumption(id):
         raise Exception("Desired consumer does not exist!")
 
     conn.close()
+
