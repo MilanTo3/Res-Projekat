@@ -57,3 +57,20 @@ def readAllConsumers():
     conn.close()
 
     return temp
+
+def updateConsumer(id, cnspn):
+    conn = sqlite3.connect('consumers.db')
+    cur = conn.cursor()
+
+    month = random.randint(1, 12)
+
+    cur.execute("""SELECT * FROM consumption_info WHERE Id = ? AND Month = ?""", (id, month))
+    temp = cur.fetchone()
+
+    if temp:
+        cur.execute("""UPDATE consumption_info SET Consumption = Consumption + ? WHERE Id = ? AND Month = ?""", (cnspn, id, month))
+    else:
+        cur.execute("""INSERT INTO consumption_info VALUES(?,?,?)""", (id, cnspn, month))
+
+    conn.commit()
+    conn.close()
