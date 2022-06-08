@@ -104,3 +104,25 @@ def monthlyStreetConsumption(street):
         raise Exception("Desired street does not exist!")
 
     conn.close()
+
+def monthlyConsumerConsumption(id):
+    conn = sqlite3.connect('consumers.db')
+    cur = conn.cursor()
+
+    cur.execute("""SELECT Id FROM consumption_info WHERE Id = ?""", (id,))
+    temp = cur.fetchall()
+
+    if temp:
+        cur.execute("""SELECT Consumption, Month FROM consumption_info WHERE Id = ?""", (id,))
+        result = cur.fetchall()
+        sum = defaultdict(int)
+
+        for i, k in result:
+            sum[k] += i 
+
+        print(sum)
+    else:
+        conn.close()
+        raise Exception("Desired consumer does not exist!")
+
+    conn.close()
