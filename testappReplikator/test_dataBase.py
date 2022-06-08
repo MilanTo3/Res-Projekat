@@ -98,3 +98,16 @@ class testDataBase(unittest.TestCase):
         updateConsumer(1, 30, 'testDB.db', 1)
 
         self.assertRaises(Exception, monthlyConsumerConsumption, 9, "testDB.db")
+
+    def test_CreateTable(self):
+        createTable('testDB.db')
+
+        conn = sqlite3.connect('testDB.db')
+        c = conn.cursor()
+
+        c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        temp = c.fetchall()
+
+        self.assertIsInstance(temp, list)
+        self.assertEquals(temp, [("consumers_info",), ("consumption_info",)])
+        
