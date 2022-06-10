@@ -1,6 +1,6 @@
 import socket, unittest, unittest.mock, sqlite3
 import threading
-from appReplikator.Reader import setupServer, reciveReciverMessage, choose
+from appReplikator.Reader import setupServer, reciveReciverMessage, choose, addConsumerTroughConsole
 from appReplikator.DataBase import createTable
 import sys
 sys.path.append('/.../appReplikator/DataBase.py')
@@ -77,3 +77,20 @@ class testReplicatorReceiver(unittest.TestCase):
         func_patch_1.assert_called_once()
         func_patch_2.assert_called_once()
         func_patch_3.assert_called_once()
+        
+    @unittest.mock.patch('builtins.input')
+    def test_addConsumerTroughConsole(self, input_patch):
+        self.cleanTables()
+        with self.assertRaises(Exception):
+            input_patch.side_effect = ['1,Petar,Petroic,Danila_Kisa,5,31000,Uzice', '1,Petar,Petroic,Danila_Kisa,5,31000,Uzice']
+            
+            addConsumerTroughConsole('testDB.db')
+            addConsumerTroughConsole('testDB.db')
+    
+    @unittest.mock.patch('builtins.input')
+    def test_addConsumerTroughConsole_1(self, input_patch):
+        self.cleanTables()
+        
+        input_patch.side_effect = ['id,Petar,Petroic,Danila_Kisa,street_num,city_num,Uzice']
+        self.assertRaises(Exception, addConsumerTroughConsole, 'testDB.db')
+        

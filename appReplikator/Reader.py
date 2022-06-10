@@ -76,14 +76,17 @@ def reciveReciverMessage(conn):
         msg = conn.recv(msg_length).decode(FORMAT)
     return msg
 
-def addConsumerTroughConsole():
+def addConsumerTroughConsole(db_name = 'consumers.db'):
     print("<----------ADD Consumer---------->")
     print("Enter Data in Format ( break with , WITHOUT space): id,name,surname,street, street_num,post_num,city")
     data = str(input())
     data = data.split(',')
-        
-    addConsumer(int(data[0]), data[1], data[2], data[3], int(data[4]), int(data[5]), data[6])
     
+    try:
+        addConsumer(int(data[0]), data[1], data[2], data[3], int(data[4]), int(data[5]), data[6], db_name)
+    except:
+        raise Exception("Unregular Input of Consumer's Data!")
+
 if __name__ == "__main__": # pragma: no cover
       
     server = setupServer()
