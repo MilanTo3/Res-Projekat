@@ -1,7 +1,7 @@
 import socket, unittest, unittest.mock, sqlite3
 import threading
 import io
-from appReplikator.Reader import readAllCons, setupServer, reciveReciverMessage, choose, addConsumerTroughConsole
+from appReplikator.Reader import readAllCons, setupServer, reciveReciverMessage, choose, addConsumerTroughConsole, readOneConsumer
 from appReplikator.DataBase import addConsumer, createTable
 import sys
 sys.path.append('/.../appReplikator/DataBase.py')
@@ -104,4 +104,18 @@ class testReplicatorReceiver(unittest.TestCase):
         sys.stdout = sys.__stdout__                     # Reset redirect.
         
         self.assertEqual("<----------All Consumers---------->\n[(1, 'Marko', 'Lazo', 'Ulica', 5, 31000, 'Uzice')]\n", capturedOutput.getvalue())
+          
+    @unittest.mock.patch('builtins.input')
+    def test_readOneConsumer(self, input_patch):
+        self.cleanTables()
+        addConsumer(1, 'Marko', 'Lazo' ,'Ulica' ,5 ,31000 ,'Uzice' ,'testDB.db')
         
+        input_patch.side_effect = ['1']
+        capturedOutput = io.StringIO()                  # Create StringIO object
+        sys.stdout = capturedOutput                     #  and redirect stdout.
+        readOneConsumer('testDB.db')                        # Call function.
+        sys.stdout = sys.__stdout__                     # Reset redirect.
+        
+        self.assertEqual("Enter ID of Consumer: \n<----------Consumer---------->\n(1, 'Marko', 'Lazo', 'Ulica', 5, 31000, 'Uzice')\n", capturedOutput.getvalue())
+        
+    
