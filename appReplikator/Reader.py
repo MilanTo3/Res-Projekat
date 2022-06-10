@@ -35,15 +35,18 @@ def handle_client(conn):
                     raise Exception()
     
 def menuListing():
+    
     while True:
+        choose()
+    
+def choose():
+        
         print("<----------Enter Option---------->")
         print("1. Add New Consumer.")
         print("2. List All Consumers.")
         print("3. List One Consumer by ID.")
         option = int(input())
-        switcher_menu(option)
     
-def switcher_menu(option):
         if option == 1:
             addConsumerTroughConsole(),
         elif option == 2: 
