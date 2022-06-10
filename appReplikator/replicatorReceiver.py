@@ -58,11 +58,9 @@ def setupClient():
     return client
 
 def periodicSend(listEl):
-    
-    #client = setupClient()
-    
+    client = setupClient()
     while True:
-        #sendToReader(client, listEl)
+        sendToReader(client, listEl)
         time.sleep(5)
         
 def setupServer():

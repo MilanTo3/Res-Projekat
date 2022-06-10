@@ -67,6 +67,12 @@ def updateConsumer(id, cnspn, db_name = 'consumers.db', flag = 0):
     else:
         month = 1
 
+    cur.execute("""SELECT * FROM consumers_info WHERE Id = ?""", (id, ))
+    consumer = cur.fetchone()
+    if consumer == None:
+        print("Consumer Does Not Exist")
+        return
+
     cur.execute("""SELECT * FROM consumption_info WHERE Id = ? AND Month = ?""", (id, month))
     temp = cur.fetchone()
 
