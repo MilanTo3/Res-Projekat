@@ -8,6 +8,7 @@ class testDataBase(unittest.TestCase):
         conn = sqlite3.connect('testDB.db')
         cursor = conn.cursor()
         
+        createTable('testDB.db')
         cursor.execute("""DELETE FROM consumers_info;""")
         cursor.execute("""DELETE FROM consumption_info;""")
 

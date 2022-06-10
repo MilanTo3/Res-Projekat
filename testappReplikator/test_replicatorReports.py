@@ -1,10 +1,21 @@
 from lib2to3.pgen2.token import EQUAL
 from tempfile import tempdir
-import unittest, unittest.mock
-from appReplikator.DataBase import addConsumer, readAllConsumers, updateConsumer
+import unittest, unittest.mock, sqlite3
+from appReplikator.DataBase import addConsumer, readAllConsumers, updateConsumer, createTable
 from appReplikator.replicatorReports import  monthlyConsumerConsumption, monthlyStreetConsumption
     
 class testReports(unittest.TestCase):
+    
+    def setUp(self):
+        conn = sqlite3.connect('testDB.db')
+        cursor = conn.cursor()
+        
+        createTable('testDb.db')
+        cursor.execute("""DELETE FROM consumers_info;""")
+        cursor.execute("""DELETE FROM consumption_info;""")
+
+        conn.commit()
+        conn.close()
     
     def test_monthlyStreetConsumption_1(self):
         addConsumer(1, "Nemanja", "Petrovic", "Banjica", 70, 11000, "Belgrade", "testDB.db")

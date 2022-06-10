@@ -48,21 +48,21 @@ def monthlyConsumerConsumption(id, db_name = 'consumers.db'):
         raise Exception("Desired consumer does not exist!")
     
     
-    if __name__ == "__main__": # pragma : no cover
+if __name__ == "__main__": # pragma : no cover
+    
+    while True:
         
-        while True:
-            
-            print("[REPORTS] Choose number to recieve desired report:")
-            print("1. Monthly water consumption by street")
-            print("2. Monthly water consumption by consumer")
-            
-            if int(input()) == 1:
-                print("Enter street name:")
-                monthlyStreetConsumption(input())
-            elif int(input()) == 2:
-                print("Enter consumer id:")
-                monthlyConsumerConsumption(input())
-            else:
-                print("Invalid input")
+        print("[REPORTS] Choose number to recieve desired report:")
+        print("1. Monthly water consumption by street")
+        print("2. Monthly water consumption by consumer")
+        
+        if int(input()) == 1:
+            print("Enter street name:")
+            monthlyStreetConsumption(input())
+        elif int(input()) == 2:
+            print("Enter consumer id:")
+            monthlyConsumerConsumption(input())
+        else:
+            print("Invalid input")
                 
             
