@@ -1,7 +1,8 @@
 import socket, unittest, unittest.mock, sqlite3
 import threading
-from appReplikator.Reader import setupServer, reciveReciverMessage, choose, addConsumerTroughConsole
-from appReplikator.DataBase import createTable
+import io
+from appReplikator.Reader import readAllCons, setupServer, reciveReciverMessage, choose, addConsumerTroughConsole
+from appReplikator.DataBase import addConsumer, createTable
 import sys
 sys.path.append('/.../appReplikator/DataBase.py')
 
@@ -93,4 +94,14 @@ class testReplicatorReceiver(unittest.TestCase):
         
         input_patch.side_effect = ['id,Petar,Petroic,Danila_Kisa,street_num,city_num,Uzice']
         self.assertRaises(Exception, addConsumerTroughConsole, 'testDB.db')
+        
+    def test_readAllCons(self):
+        self.cleanTables()
+        addConsumer(1, 'Marko', 'Lazo' ,'Ulica' ,5 ,31000 ,'Uzice' ,'testDB.db')
+        capturedOutput = io.StringIO()                  # Create StringIO object
+        sys.stdout = capturedOutput                     #  and redirect stdout.
+        readAllCons('testDB.db')                        # Call function.
+        sys.stdout = sys.__stdout__                     # Reset redirect.
+        
+        self.assertEqual("<----------All Consumers---------->\n[(1, 'Marko', 'Lazo', 'Ulica', 5, 31000, 'Uzice')]\n", capturedOutput.getvalue())
         

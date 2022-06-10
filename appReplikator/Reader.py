@@ -56,16 +56,16 @@ def choose():
         else:
             print("Nothing...")
         
-def readAllCons():
+def readAllCons(db_name = 'consumers.db'):
     print("<----------All Consumers---------->")
-    temp = readAllConsumers()
+    temp = readAllConsumers(db_name)
     print(str(temp))
 
-def readOneConsumer():
+def readOneConsumer(db_name = 'consumers.db'):
     print("Enter ID of Consumer: ")
-    id = int(input())   
+    id = int(input())
     print("<----------Consumer---------->")
-    info = readConsumerInfo(id)
+    info = readConsumerInfo(id, db_name)
     print(str(info))
 
 def reciveReciverMessage(conn):
@@ -78,7 +78,7 @@ def reciveReciverMessage(conn):
 
 def addConsumerTroughConsole(db_name = 'consumers.db'):
     print("<----------ADD Consumer---------->")
-    print("Enter Data in Format ( break with , WITHOUT space): id,name,surname,street, street_num,post_num,city")
+    print("Enter Data in Format ( break with , WITHOUT space): id,name,surname,street,street_num,post_num,city")
     data = str(input())
     data = data.split(',')
     
