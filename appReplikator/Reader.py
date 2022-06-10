@@ -24,15 +24,21 @@ def setupServer():
 
 def handle_client(conn):
     while True:
-        msg = reciveReciverMessage(conn)        
-        params = msg.split(';')
-        for split in params:
-            if len(split) > 0:
-                jsonToObj: consumerConsumption = json.loads(split)
-                try:
-                    updateConsumer(jsonToObj['id'], jsonToObj['cnspn'])
-                except: 
-                    raise Exception()
+        msg = reciveReciverMessage(conn)
+        for obj in jsonToObj(msg):
+            try:
+                updateConsumer(obj['id'], obj['cnspn'])
+            except: 
+                raise Exception()
+    
+def jsonToObj(message):
+    listEl = []
+    params = message.split(';')
+    for split in params:
+        if len(split) > 0:
+            jsonToObj: consumerConsumption = json.loads(split)
+            listEl.append(jsonToObj)
+    return listEl
     
 def menuListing():
     

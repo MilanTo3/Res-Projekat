@@ -1,7 +1,7 @@
 import socket, unittest, unittest.mock, sqlite3
 import threading
 import io
-from appReplikator.Reader import readAllCons, setupServer, reciveReciverMessage, choose, addConsumerTroughConsole, readOneConsumer
+from appReplikator.Reader import consumerConsumption, readAllCons, setupServer, reciveReciverMessage, choose, addConsumerTroughConsole, readOneConsumer, jsonToObj
 from appReplikator.DataBase import addConsumer, createTable
 import sys
 sys.path.append('/.../appReplikator/DataBase.py')
@@ -118,4 +118,10 @@ class testReplicatorReceiver(unittest.TestCase):
         
         self.assertEqual("Enter ID of Consumer: \n<----------Consumer---------->\n(1, 'Marko', 'Lazo', 'Ulica', 5, 31000, 'Uzice')\n", capturedOutput.getvalue())
         
-    
+    def test_jsonToObj(self):
+        jsonn = '{"id":1,"cnspn":3};{"id":2,"cnspn":5}'
+        jsonList = jsonToObj(jsonn)
+
+        self.assertEqual(jsonList, [{"id":1, "cnspn":3}, {"id":2, "cnspn":5}])
+        
+        
