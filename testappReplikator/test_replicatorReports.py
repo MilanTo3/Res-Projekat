@@ -52,14 +52,16 @@ class testReports(unittest.TestCase):
     @unittest.mock.patch('builtins.input')
     def test_menu(self, input_patch, func_patch_1, func_patch_2):
         
-        input_patch.side_effect = ['1', 'Partizanskih baza', '2', '5', '4', 'rec']
+        input_patch.side_effect = ['1', 'Partizanskih baza', '2', '5', '4', 'rec', '2', 'rec']
         menu()
         menu()
         x = menu()
         y = menu()
+        z = menu()
         func_patch_1.assert_called_once()
         func_patch_2.assert_called_once()
         self.assertEqual(x, 0)
         self.assertEqual(y, 1)
+        self.assertEqual(z, 2)
         
     

@@ -74,7 +74,7 @@ def menu():
             inValue = int(input())
         except:
             print("Given value is not an integer.")
-            return 0
+            return 2
         result = monthlyConsumerConsumption(inValue)
         if result != (0, 0):
             print("Monthly water consumption for consumer with id:", result[0])
