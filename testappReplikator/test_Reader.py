@@ -71,15 +71,17 @@ class testReplicatorReceiver(unittest.TestCase):
     @unittest.mock.patch('builtins.input')
     def test_Menu_2(self, input_patch, func_patch_1, func_patch_2, func_patch_3):
         
-        input_patch.side_effect = ['1', '2', '3', '4']
+        input_patch.side_effect = ['1', '2', '3', '4', 'rec']
         choose()
         choose()
         choose()
         x = choose()
+        y = choose()
         func_patch_1.assert_called_once()
         func_patch_2.assert_called_once()
         func_patch_3.assert_called_once()
         self.assertEqual(x, 0)
+        self.assertEqual(y, 1)
         
     @unittest.mock.patch('builtins.input')
     def test_addConsumerTroughConsole(self, input_patch):

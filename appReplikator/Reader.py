@@ -51,7 +51,11 @@ def choose():
         print("1. Add New Consumer.")
         print("2. List All Consumers.")
         print("3. List One Consumer by ID.")
-        option = int(input())
+        try:
+            option = int(input())
+        except:
+            print("Input value must be an integer")
+            return 1
     
         if option == 1:
             addConsumerTroughConsole(),
