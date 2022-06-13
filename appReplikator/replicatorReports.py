@@ -18,12 +18,11 @@ def monthlyStreetConsumption(street, db_name = 'consumers.db'):
         for i, k in result:
             sum[k] += i 
 
-        print("Monthly water consumption for ", street, " is ", sum)
         conn.close()
-        return sum
+        return street, sum
     else:
         conn.close()
-        raise Exception("Desired street does not exist!")
+        print("Desired street does not exist!")
 
 def monthlyConsumerConsumption(id, db_name = 'consumers.db'):
     conn = sqlite3.connect(db_name)
@@ -42,13 +41,13 @@ def monthlyConsumerConsumption(id, db_name = 'consumers.db'):
 
         print("Monthly water consumption for user with id:", id, " is ", sum)
         conn.close()
-        return sum
+        return id, sum
     else:
         conn.close()
-        raise Exception("Desired consumer does not exist!")
+        print("Desired consumer does not exist!")
     
     
-if __name__ == "__main__": # pragma : no cover
+if __name__ == "__main__": # pragma: no cover
     
     while True:
         
@@ -56,12 +55,16 @@ if __name__ == "__main__": # pragma : no cover
         print("1. Monthly water consumption by street")
         print("2. Monthly water consumption by consumer")
         
-        if int(input()) == 1:
+        x = input()
+        
+        if int(x) == 1:
             print("Enter street name:")
-            monthlyStreetConsumption(input())
-        elif int(input()) == 2:
+            result = monthlyStreetConsumption(x)
+            print("Monthly water consumption for street ", result[0], " is ", result[1])
+        elif int(x) == 2:
             print("Enter consumer id:")
-            monthlyConsumerConsumption(input())
+            result = monthlyConsumerConsumption(x)
+            print("Monthly water consumption for consumer with id =", result[0], " is ", result[1])
         else:
             print("Invalid input")
                 
