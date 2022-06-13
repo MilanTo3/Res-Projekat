@@ -13,7 +13,7 @@ FORMAT = 'utf-8'
 ADDRESS = (SERVER, PORT)
 
 def createMessage():
-    id = randint(1, 1000)
+    id = randint(1, 5)
     water_consumed = randint(0, 240)
     return id, water_consumed
 

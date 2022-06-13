@@ -70,7 +70,6 @@ def updateConsumer(id, cnspn, db_name = 'consumers.db', flag = 0):
     cur.execute("""SELECT * FROM consumers_info WHERE Id = ?""", (id, ))
     consumer = cur.fetchone()
     if consumer == None:
-        print("Consumer Does Not Exist")
         return
 
     cur.execute("""SELECT * FROM consumption_info WHERE Id = ? AND Month = ?""", (id, month))
@@ -91,3 +90,7 @@ def printConsumption():
     cur.execute("""SELECT * FROM consumption_info""")
     print(cur.fetchall())
     conn.close()
+    
+if __name__ == "__main__": # pragma: no cover
+    createTable()
+    addConsumer(5,"aca", "nestor", "Partizanskih baza", 8, 21000, "Novi Sad")
