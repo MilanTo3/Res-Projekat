@@ -1,3 +1,4 @@
+from gc import freeze
 import socket
 import threading
 import time, copy
@@ -15,7 +16,6 @@ def handle_client(conn):
     
     while True:
         msg = receiveSenderMessage(conn)
-        print(msg)
         listEl.append(msg)
             
 def receiveSenderMessage(conn):
@@ -37,30 +37,46 @@ def makeDataString(listEl: List):
         strData += freezeList[i]
         if i != (len(freezeList) - 1):
             strData += ';'
-        listEl.remove(freezeList[i])
     print('---ListAfter:')
     print(listEl)
-    return strData
+    return strData, freezeList
+
+def deleteElements(freezeList: List, listEls):
+    
+    for i in range(len(freezeList)):
+        listEls.remove(freezeList[i])
 
 def sendToReader(cli, listEl):
     
-    msg = makeDataString(listEl)
+    msg, currentList = makeDataString(listEl)
     msg_length = len(msg)
     send_length = str(msg_length).encode(FORMAT)
     send_length += b' ' * (HEADER - len(send_length))
-    cli.send(send_length)
-    cli.send(msg.encode(FORMAT))
+    try:
+        cli.send(send_length)
+        cli.send(msg.encode(FORMAT))
+        deleteElements(currentList, listEl)
+        return True
+    except:
+        print("Cant send, Reader unavailable at this time.")
+        return False
     
 def setupClient():
     
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((shotServer, shotPort))
+    try:
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect((shotServer, shotPort))
+    except:
+        print('Connect to the Reader component unsuccessfull.')
+        client = None
     return client
 
 def periodicSend(listEl):
+    
     client = setupClient()
     while True:
-        sendToReader(client, listEl)
+        sent = sendToReader(client, listEl)
+        if sent == False: client = setupClient()
         time.sleep(5)
         
 def setupServer():

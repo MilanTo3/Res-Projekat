@@ -47,19 +47,6 @@ class testReplicatorReceiver(unittest.TestCase):
         client = setupClient()
         self.assertIsNotNone(client, 'Client isnt none! Successfull connect call.')
         client.close()
-        
-    def test_setupClient2(self):
-        
-        server_thread = threading.Thread(target=self.run_mock_receiver, args=(False, ))
-        server_thread.start()
-        
-        raised = False
-        try:
-            setupClient()
-        except:
-            raised = True
-                    
-        self.assertFalse(raised, 'Exception not raised.')
             
     def test_setupClient(self):
         
@@ -67,6 +54,11 @@ class testReplicatorReceiver(unittest.TestCase):
             c = setupClient()
             c.connect.assert_called_with(('localhost', 5053))
             
+    def test_setupClient2(self):
+        
+        c = setupClient()
+        self.assertIsNone(c)
+                    
     def test_setupServer(self):
         
         with unittest.mock.patch('appReplikator.replicatorReceiver.socket.socket'):
@@ -92,15 +84,15 @@ class testReplicatorReceiver(unittest.TestCase):
         listEl2 = ['[id: 1, cnsmp: 20]']
         listEl3 = ['']
         
-        data1 = makeDataString(listEl1)
-        data2 = makeDataString(listEl2)
-        data3 = makeDataString(listEl3)
+        data1, _ = makeDataString(listEl1)
+        data2, _ = makeDataString(listEl2)
+        data3, _ = makeDataString(listEl3)
         
         self.assertEqual(data1, '[id: 1, cnsmp: 3];[id: 1, cnsmp: 200];[id: 3, cnsmp: 23]')
         self.assertEqual(data2, '[id: 1, cnsmp: 20]')
         self.assertEqual(data3, '')
     
-    def test_sendToReader(self):
+    def test_sendToReader_1(self):
         
         server_thread = threading.Thread(target=self.run_mock_receiver, args=(True, ))
         server_thread.start()
@@ -111,4 +103,12 @@ class testReplicatorReceiver(unittest.TestCase):
         sendToReader(c, listEl)
         server_thread.join()
         self.assertEqual('[id: 1, cnsmp: 2];[id: 4, cnsmp: 3];[id: 210, cnsmp: 34]', self.k)
+        
+    def test_sendToSender_2(self):
+        
+        c = setupClient()
+        listEl = ['{"id":1,"cnspn":2}', '{"id":2,"cnspn":7}']
+        
+        k = sendToReader(c, listEl)
+        self.assertEqual(k, False)
         
