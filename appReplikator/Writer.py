@@ -32,15 +32,8 @@ def sendToSender(client, msg):
     sendlength += b' ' * (HEADER - len(sendlength))
     client.send(sendlength)
     client.send(msg.encode(FORMAT))
-    
-#def periodicSend(msg):
- #   client = setupClient()
-  #  
-   # while True:
-    #    sendToSender(client, msg)
-     #   time.sleep(5000)
         
-if __name__ == "__main__": # pragma : no cover
+if __name__ == "__main__": # pragma: no cover
     
     client = setupClient()
         

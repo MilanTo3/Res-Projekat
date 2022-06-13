@@ -61,6 +61,7 @@ def choose():
             readOneConsumer()
         else:
             print("Nothing...")
+            return 0
         
 def readAllCons(db_name = 'consumers.db'):
     print("<----------All Consumers---------->")
