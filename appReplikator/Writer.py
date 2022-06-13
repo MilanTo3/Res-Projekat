@@ -22,8 +22,12 @@ def formatMessage(id, cnsmp):
     return formatedMessage
 
 def setupClient():
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(ADDRESS)
+    try:
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+        client.connect(ADDRESS)
+    except:
+        client = None
+        
     return client
 
 def sendToSender(client, msg):

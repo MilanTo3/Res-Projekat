@@ -51,16 +51,8 @@ class test_replicatorSender(unittest.TestCase):
         
     def test_setupClient2(self):
         
-        server_thread = threading.Thread(target=self.run_mock_receiver, args=(False, ))
-        server_thread.start()
-        
-        raised = False
-        try:
-            setupClient()
-        except:
-            raised = True
-                    
-        self.assertFalse(raised, 'Exception not raised.')
+        x = setupClient()
+        self.assertIsNone(x)
             
     def test_setupClient(self):
 

@@ -26,9 +26,11 @@ def sendToReceiver(client, msg):
     client.send(msg.encode(FORMAT))
 
 def setupClient():
-    
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((shotServer, shotPort))
+    try:
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect((shotServer, shotPort))
+    except:
+        client = None
     return client
 
 def handle_client(conn):

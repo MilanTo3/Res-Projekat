@@ -26,19 +26,9 @@ class test_replicatorWriter(unittest.TestCase):
                 self.k = connection.recv(msg_length).decode(FORMAT)
         serverSocket.close()
         
-    def test_clientSetupException(self):
-        
-        server_thread = threading.Thread(target=self.runMockServer, args=(False, ))
-        server_thread.start()
-        
-        raised = False
-        
-        try:
-            setupClient()
-        except:
-            raised = True
-        
-        self.assertFalse(raised, "No exception raised")
+    def test_clientSetupIsNone(self):
+        x = setupClient()
+        self.assertIsNone(x)
         
     def test_address(self):
         
