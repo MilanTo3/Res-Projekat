@@ -62,15 +62,15 @@ def updateConsumer(id, cnspn, db_name = 'consumers.db', flag = 0):
     conn = sqlite3.connect(db_name)
     cur = conn.cursor()
 
-    if flag == 0:
-        month = random.randint(1, 12)
-    else:
+    month = random.randint(1, 12)
+    
+    if flag != 0:
         month = 1
 
     cur.execute("""SELECT * FROM consumers_info WHERE Id = ?""", (id, ))
     consumer = cur.fetchone()
     if consumer == None:
-        return
+        return 0
 
     cur.execute("""SELECT * FROM consumption_info WHERE Id = ? AND Month = ?""", (id, month))
     temp = cur.fetchone()
@@ -83,13 +83,13 @@ def updateConsumer(id, cnspn, db_name = 'consumers.db', flag = 0):
     conn.commit()
     conn.close()
 
-def printConsumption():
-    conn = sqlite3.connect('consumers.db')
-    cur = conn.cursor()
-
-    cur.execute("""SELECT * FROM consumption_info""")
-    print(cur.fetchall())
-    conn.close()
+#def printConsumption():
+#    conn = sqlite3.connect('consumers.db')
+#    cur = conn.cursor()
+#
+#    cur.execute("""SELECT * FROM consumption_info""")
+#    print(cur.fetchall())
+#    conn.close()
     
 if __name__ == "__main__": # pragma: no cover
     createTable()

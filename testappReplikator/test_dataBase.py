@@ -68,6 +68,10 @@ class testDataBase(unittest.TestCase):
 
         self.assertEqual(temp, (1, 60, 1))        
         conn.close()
+    
+    def test_updateConsumer_3(self):
+        x = updateConsumer(1, 155, 'testDB.db')
+        self.assertEqual(x, 0)
 
     def test_CreateTable(self):
         createTable('testDB.db')
