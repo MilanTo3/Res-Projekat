@@ -10,6 +10,7 @@ shotServer = "localhost"
 shotPort = 5052
 
 def receiveWriterMessage(conn):
+    
     msg = ''
     msg_length = conn.recv(HEADER).decode(FORMAT)
     if msg_length:
@@ -17,13 +18,15 @@ def receiveWriterMessage(conn):
         msg = conn.recv(msg_length).decode(FORMAT)
     return msg
 
-def sendToReceiver(client, msg):
+def sendToReceiver(client, msg, lock: threading.Lock):
     
+    lock.acquire()
     msg_length = len(msg)
     send_length = str(msg_length).encode(FORMAT)
     send_length += b' ' * (HEADER - len(send_length))
     client.send(send_length)
     client.send(msg.encode(FORMAT))
+    lock.release()
 
 def setupClient():
     try:
@@ -36,10 +39,12 @@ def setupClient():
 def handle_client(conn):
     
     while True:
-        msg = receiveWriterMessage(conn)
-        relayLock.acquire()
-        sendToReceiver(shotClient, msg)
-        relayLock.release()
+        try:
+            msg = receiveWriterMessage(conn)
+        except:
+            print('Writer disconnected.')
+            return
+        sendToReceiver(shotClient, msg, relayLock)
         
 def setupServer():
     print("[STARTING] server is starting...")

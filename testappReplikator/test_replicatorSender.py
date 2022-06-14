@@ -27,6 +27,24 @@ class test_replicatorSender(unittest.TestCase):
                 self.k = conn.recv(msg_length).decode(FORMAT)
         server_sock.close()
         
+    def run_mock_receiver_multiple_connections(self):
+        
+        server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_sock.bind(('127.0.0.1', shotPort))
+        server_sock.listen()
+        conn1, addr1 = server_sock.accept()
+        conn2, addr2 = server_sock.accept()
+        conn3, addr3 = server_sock.accept()
+        
+        conns = [conn1, conn2, conn3]
+        
+        k = ''
+        for conn in conns:
+            msg_length = conn.recv(HEADER).decode(FORMAT)
+            if msg_length:
+                msg_length = int(msg_length)
+                self.k += conn.recv(msg_length).decode(FORMAT)
+        
     def run_fake_client(self):
         
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -79,13 +97,37 @@ class test_replicatorSender(unittest.TestCase):
         sock.close()
         self.assertEqual('Porukica', msg)
         
-    def test_sendMessage(self):
+    def test_sendMessage_1(self):
         
         server_thread = threading.Thread(target=self.run_mock_receiver, args=(True, ))
         server_thread.start()
         
+        lock = threading.Lock()
         c = setupClient()
-        sendToReceiver(c, 'Porukica2')
+        sendToReceiver(c, 'Porukica2', lock)
         
         server_thread.join() # Sacekamo da server primi poruku i setuje self.k na 'Porukica2'.
         self.assertEqual('Porukica2', self.k)
+        
+    def test_sendMessage_2(self):
+        
+        server_thread = threading.Thread(target=self.run_mock_receiver_multiple_connections)
+        server_thread.start()
+        
+        relayLock = threading.Lock()
+        client1_thread = threading.Thread(target=self.sendThreadWriterSim, args=(relayLock, ))
+        client2_thread = threading.Thread(target=self.sendThreadWriterSim, args=(relayLock, ))
+        client3_thread = threading.Thread(target=self.sendThreadWriterSim, args=(relayLock, ))
+
+        client1_thread.start()
+        client2_thread.start()
+        client3_thread.start()
+        
+        server_thread.join()
+        
+        self.assertEqual('PorukaPorukaPoruka', self.k)
+        
+    def sendThreadWriterSim(self, lock):
+        
+        c1 = setupClient()
+        sendToReceiver(c1, 'Poruka', lock)

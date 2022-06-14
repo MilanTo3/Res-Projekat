@@ -1,7 +1,7 @@
 from lib2to3.pgen2.token import EQEQUAL
 import socket
 import threading
-from appReplikator.DataBase import *
+from DataBase import *
 import json
 
 HEADER = 64

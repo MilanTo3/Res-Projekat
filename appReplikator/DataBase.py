@@ -90,7 +90,5 @@ def updateConsumer(id, cnspn, db_name = 'consumers.db', flag = 0):
 #    cur.execute("""SELECT * FROM consumption_info""")
 #    print(cur.fetchall())
 #    conn.close()
-    
 if __name__ == "__main__": # pragma: no cover
     createTable()
-    addConsumer(5,"aca", "nestor", "Partizanskih baza", 8, 21000, "Novi Sad")
