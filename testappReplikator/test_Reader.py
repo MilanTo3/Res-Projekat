@@ -125,7 +125,7 @@ class testReplicatorReceiver(unittest.TestCase):
         self.assertEqual("Enter ID of Consumer: \n<----------Consumer---------->\n(1, 'Marko', 'Lazo', 'Ulica', 5, 31000, 'Uzice')\n", capturedOutput.getvalue())
     
     @unittest.mock.patch('builtins.input')
-    def test_readOneConsumer(self, input_patch):
+    def test_readOneConsumer1(self, input_patch):
         input_patch.side_effect = ["This is string..."]
         ret = readOneConsumer('testDB.db')
         self.assertEqual(ret, 0)

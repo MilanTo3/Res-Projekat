@@ -21,15 +21,6 @@ def setupServer():
     server.listen()
     
     return server
-
-def handle_client(conn):
-    while True:
-        msg = reciveReciverMessage(conn)
-        for obj in jsonToObj(msg):
-            try:
-                updateConsumer(obj['id'], obj['cnspn'])
-            except: 
-                raise Exception()
     
 def jsonToObj(message):
     listEl = []
@@ -42,8 +33,7 @@ def jsonToObj(message):
     
 def menuListing():
     
-    while True:
-        choose()
+    while True: choose()
     
 def choose():
         
@@ -116,4 +106,10 @@ if __name__ == "__main__": # pragma: no cover
     menuThread = threading.Thread(target=menuListing) 
     menuThread.start()
     
-    handle_client(conn)
+    while True:
+        msg = reciveReciverMessage(conn)
+        for obj in jsonToObj(msg):
+            try:
+                updateConsumer(obj['id'], obj['cnspn'])
+            except: 
+                raise Exception()
