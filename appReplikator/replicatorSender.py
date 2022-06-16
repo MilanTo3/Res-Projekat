@@ -43,7 +43,7 @@ def handle_client(conn):
             msg = receiveWriterMessage(conn)
         except:
             print('Writer disconnected.')
-            return
+            return 0
         sendToReceiver(shotClient, msg, relayLock)
         
 def setupServer():

@@ -1,6 +1,6 @@
 import socket, unittest, unittest.mock
 import threading
-from appReplikator.replicatorSender import setupClient, setupServer, receiveWriterMessage, sendToReceiver
+from appReplikator.replicatorSender import setupClient, setupServer, receiveWriterMessage, sendToReceiver, handle_client
 
 HEADER = 64
 PORT = 5050
@@ -131,3 +131,16 @@ class test_replicatorSender(unittest.TestCase):
         
         c1 = setupClient()
         sendToReceiver(c1, 'Poruka', lock)
+        
+    def test_handle_client(self):
+        
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind(ADDR)
+        server_socket.listen()
+        t = threading.Timer(2, self.run_fake_client)
+        t.start()
+        server_socket.accept()
+        
+        with unittest.mock.patch('appReplikator.replicatorSender.sendToReceiver'):
+            k = handle_client(server_socket)
+            self.assertEqual(k, 0)
