@@ -31,7 +31,7 @@ def addConsumer(id, name, surname, street, street_num, post_num, city, db_name =
         cur.execute("""INSERT INTO consumers_info(Id, Name, Surname, Street, Street_num, Post_num, City)
                                         VALUES(?, ?, ?, ?, ?, ?, ?)""", (id, name, surname, street, street_num, post_num, city))
     except sqlite3.IntegrityError:
-        raise Exception("User with this ID already exists")
+        raise sqlite3.IntegrityError("User with this ID already exists")
     
     conn.commit()
     conn.close()

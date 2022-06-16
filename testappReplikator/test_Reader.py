@@ -86,18 +86,20 @@ class testReplicatorReceiver(unittest.TestCase):
     @unittest.mock.patch('builtins.input')
     def test_addConsumerTroughConsole(self, input_patch):
         self.cleanTables()
-        with self.assertRaises(Exception):
-            input_patch.side_effect = ['1,Petar,Petroic,Danila_Kisa,5,31000,Uzice', '1,Petar,Petroic,Danila_Kisa,5,31000,Uzice']
-            
-            addConsumerTroughConsole('testDB.db')
-            addConsumerTroughConsole('testDB.db')
+    
+        input_patch.side_effect = ['1,Petar,Petroic,Danila_Kisa,5,31000,Uzice', '1,Petar,Petroic,Danila_Kisa,5,31000,Uzice']
+        
+        addConsumerTroughConsole('testDB.db')
+        ret = addConsumerTroughConsole('testDB.db')
+        self.assertEqual(ret, 0)
     
     @unittest.mock.patch('builtins.input')
     def test_addConsumerTroughConsole_1(self, input_patch):
         self.cleanTables()
         
         input_patch.side_effect = ['id,Petar,Petroic,Danila_Kisa,street_num,city_num,Uzice']
-        self.assertRaises(Exception, addConsumerTroughConsole, 'testDB.db')
+        ret = addConsumerTroughConsole('testDB.db')
+        self.assertEqual(ret, 1)
         
     def test_readAllCons(self):
         self.cleanTables()
@@ -121,7 +123,13 @@ class testReplicatorReceiver(unittest.TestCase):
         sys.stdout = sys.__stdout__                     # Reset redirect.
         
         self.assertEqual("Enter ID of Consumer: \n<----------Consumer---------->\n(1, 'Marko', 'Lazo', 'Ulica', 5, 31000, 'Uzice')\n", capturedOutput.getvalue())
-        
+    
+    @unittest.mock.patch('builtins.input')
+    def test_readOneConsumer(self, input_patch):
+        input_patch.side_effect = ["This is string..."]
+        ret = readOneConsumer('testDB.db')
+        self.assertEqual(ret, 0)
+    
     def test_jsonToObj(self):
         jsonn = '{"id":1,"cnspn":3};{"id":2,"cnspn":5}'
         jsonList = jsonToObj(jsonn)

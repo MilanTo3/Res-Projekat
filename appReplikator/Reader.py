@@ -1,8 +1,8 @@
 from lib2to3.pgen2.token import EQEQUAL
 import socket
 import threading
-from DataBase import *
-import json
+from appReplikator.DataBase import *
+import json, sqlite3
 
 HEADER = 64
 PORT = 5053
@@ -74,7 +74,12 @@ def readAllCons(db_name = 'consumers.db'):
 
 def readOneConsumer(db_name = 'consumers.db'):
     print("Enter ID of Consumer: ")
-    id = int(input())
+    try:
+        id = int(input())    
+    except:
+        print("Given value is not an integer")
+        return 0
+    
     print("<----------Consumer---------->")
     info = readConsumerInfo(id, db_name)
     print(str(info))
@@ -95,8 +100,12 @@ def addConsumerTroughConsole(db_name = 'consumers.db'):
     
     try:
         addConsumer(int(data[0]), data[1], data[2], data[3], int(data[4]), int(data[5]), data[6], db_name)
-    except:
-        raise Exception("Unregular Input of Consumer's Data!")
+    except sqlite3.IntegrityError:
+        print("Consumer Already Exists!")
+        return 0
+    except Exception:
+        print("Unregular Input of Consumer's Data!")
+        return 1
 
 if __name__ == "__main__": # pragma: no cover
       
